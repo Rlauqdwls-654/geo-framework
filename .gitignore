@@ -1,0 +1,15 @@
+# forgeflow
+.forgeflow/run/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*.swo
