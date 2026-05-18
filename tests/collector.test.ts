@@ -16,7 +16,8 @@ describe("Collector", () => {
     expect(platforms).toContain("openai");
     expect(platforms).toContain("gemini");
     expect(platforms).toContain("perplexity");
-    expect(platforms).toHaveLength(3);
+    expect(platforms).toContain("google-ai-mode");
+    expect(platforms).toHaveLength(4);
   });
 
   it("API 키가 없어도 collector는 생성되어야 함", () => {

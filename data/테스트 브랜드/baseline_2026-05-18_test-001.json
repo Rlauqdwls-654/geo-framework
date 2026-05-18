@@ -1,0 +1,25 @@
+{
+  "id": "test-001",
+  "brand": "테스트 브랜드",
+  "experimentName": "테스트 실험",
+  "phase": "baseline",
+  "date": "2026-05-18T00:00:00.000Z",
+  "queries": [
+    [
+      {
+        "platform": "openai",
+        "query": "카페 추천",
+        "response": "터미널 에스프레소 하우스를 추천합니다.",
+        "mentions": [
+          {
+            "brand": "테스트 브랜드",
+            "sentence": "터미널 에스프레소 하우스를 추천합니다.",
+            "context": "부산 카페 중에서 터미널 에스프레소 하우스를 추천합니다.",
+            "sentiment": "recommendation"
+          }
+        ],
+        "timestamp": "2026-05-18T00:00:00.000Z"
+      }
+    ]
+  ]
+}
