@@ -10,6 +10,9 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Environment
+.env
+
 # Editor
 .vscode/
 *.swp

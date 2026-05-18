@@ -3,7 +3,9 @@ import type { PlatformClient, PlatformResult, PlatformQueryInput } from "./types
 import { MentionDetector } from "./mention-detector.js";
 import { config } from "../config.js";
 
-const MODEL = "gemini-2.0-flash";
+const MODELS = ["gemini-2.5-flash", "gemini-2.5-pro"];
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export class GeminiClient implements PlatformClient {
   readonly name = "gemini" as const;
@@ -22,31 +24,48 @@ export class GeminiClient implements PlatformClient {
   }
 
   async query(input: PlatformQueryInput): Promise<PlatformResult> {
-    try {
-      const response = await this.getClient().models.generateContent({
-        model: MODEL,
-        contents: input.query,
-      });
+    let lastError: Error | null = null;
 
-      const content = response.text || "";
-      const mentions = this.detector.detect(content, input.brand);
+    for (const model of MODELS) {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const response = await this.getClient().models.generateContent({
+            model,
+            contents: input.query,
+            config: { maxOutputTokens: 1024 },
+          });
 
-      return {
-        platform: "gemini",
-        query: input.query,
-        response: content,
-        mentions,
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error) {
-      return {
-        platform: "gemini",
-        query: input.query,
-        response: "",
-        mentions: [],
-        timestamp: new Date().toISOString(),
-        error: error instanceof Error ? error.message : String(error),
-      };
+          const content = response.text || "";
+          const mentions = this.detector.detect(content, input.brand);
+
+          return {
+            platform: "gemini",
+            query: input.query,
+            response: content,
+            mentions,
+            timestamp: new Date().toISOString(),
+          };
+        } catch (error) {
+          lastError = error instanceof Error ? error : new Error(String(error));
+          const msg = lastError.message.toLowerCase();
+          if (msg.includes("503") || msg.includes("unavailable") || msg.includes("high demand")) {
+            const delay = [3000, 6000, 10000][attempt] || 5000;
+            await sleep(delay);
+            continue;
+          }
+          if (msg.includes("404") || msg.includes("not found")) break;
+          await sleep(1000);
+        }
+      }
     }
+
+    return {
+      platform: "gemini",
+      query: input.query,
+      response: "",
+      mentions: [],
+      timestamp: new Date().toISOString(),
+      error: lastError?.message || "Gemini API 오류",
+    };
   }
 }

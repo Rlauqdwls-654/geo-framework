@@ -30,7 +30,7 @@ async function main() {
   console.log("━━━ GEO Framework v1.0.0 ━━━");
   console.log("Platforms: OpenAI, Gemini, Perplexity, Google AI Mode\n");
 
-  const missing = validateConfig();
+  const missing = validateConfig(["openai", "gemini"]);
 
   if (missing.length > 0) {
     console.warn(`⚠️  API 키가 설정되지 않음: ${missing.join(", ")}`);

@@ -7,6 +7,7 @@ import type {
 import { OpenAIClient } from "./openai.js";
 import { GeminiClient } from "./gemini.js";
 import { PerplexityClient } from "./perplexity.js";
+import { GoogleAiModeClient } from "./google-ai-mode.js";
 
 /** 모든 플랫폼 결과를 담는 컨테이너 */
 export interface CollectionResult {
@@ -16,7 +17,7 @@ export interface CollectionResult {
 }
 
 /** 기본 제공 플랫폼 목록 */
-const PLATFORMS: PlatformName[] = ["openai", "gemini", "perplexity"];
+const PLATFORMS: PlatformName[] = ["openai", "gemini", "perplexity", "google-ai-mode"];
 
 /**
  * 여러 AI 플랫폼에 쿼리를 동시에 전송하고 결과를 수집한다.
@@ -42,6 +43,8 @@ export class Collector {
         return new GeminiClient();
       case "perplexity":
         return new PerplexityClient();
+      case "google-ai-mode":
+        return new GoogleAiModeClient();
       default:
         throw new Error(`Unknown platform: ${name}`);
     }
