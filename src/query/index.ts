@@ -1,1 +1,2 @@
-export type { QueryInput, GeneratedQuery } from "./types.js";
+export type { QueryInput, GeneratedQuery, CategorizedQuery } from "./types.js";
+export { QueryGenerator } from "./generator.js";
