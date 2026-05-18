@@ -1,0 +1,38 @@
+{
+  "name": "geo-framework",
+  "version": "1.0.0",
+  "description": "GEO(Generative Engine Optimization) 프레임워크 - AI 검색 엔진 최적화 전략 실행",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rlauqdwls-654/geo-framework.git"
+  },
+  "keywords": ["geo", "seo", "ai-optimization", "generative-engine"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rlauqdwls-654/geo-framework/issues"
+  },
+  "homepage": "https://github.com/Rlauqdwls-654/geo-framework#readme",
+  "dependencies": {
+    "openai": "^4.0.0",
+    "@google/genai": "^1.0.0",
+    "playwright": "^1.50.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "tsx": "^4.16.0",
+    "vitest": "^2.0.0",
+    "@types/node": "^22.0.0"
+  }
+}
