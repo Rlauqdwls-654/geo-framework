@@ -23,6 +23,15 @@ export class GeminiClient implements PlatformClient {
     return this.client;
   }
 
+  /**
+   * 응답 텍스트에서 URL 추출
+   */
+  private extractUrls(text: string): string[] {
+    const urlRegex = /https?:\/\/[^\s\n)"'\]]+/g;
+    const matches = text.match(urlRegex);
+    return matches ? [...new Set(matches)] : [];
+  }
+
   async query(input: PlatformQueryInput): Promise<PlatformResult> {
     let lastError: Error | null = null;
 
@@ -36,21 +45,31 @@ export class GeminiClient implements PlatformClient {
           });
 
           const content = response.text || "";
+
+          // 브랜드 인용 탐지
           const mentions = this.detector.detect(content, input.brand);
 
-          return {
+          // 응답에 포함된 출처 URL 추출
+          const urls = this.extractUrls(content);
+
+          const result: PlatformResult & { urls?: string[] } = {
             platform: "gemini",
             query: input.query,
             response: content,
             mentions,
             timestamp: new Date().toISOString(),
           };
+
+          if (urls.length > 0) {
+            result.urls = urls;
+          }
+
+          return result;
         } catch (error) {
           lastError = error instanceof Error ? error : new Error(String(error));
           const msg = lastError.message.toLowerCase();
           if (msg.includes("503") || msg.includes("unavailable") || msg.includes("high demand")) {
-            const delay = [3000, 6000, 10000][attempt] || 5000;
-            await sleep(delay);
+            await sleep([3000, 6000, 10000][attempt] || 5000);
             continue;
           }
           if (msg.includes("404") || msg.includes("not found")) break;

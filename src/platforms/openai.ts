@@ -16,8 +16,6 @@ export class OpenAIClient implements PlatformClient {
   }
 
   async query(input: PlatformQueryInput): Promise<PlatformResult> {
-    const startTime = Date.now();
-
     try {
       const response = await this.client.chat.completions.create({
         model: MODEL,
